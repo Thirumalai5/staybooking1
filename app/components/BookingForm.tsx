@@ -36,6 +36,23 @@ export default function BookingForm({ propertyId, pricePerNight, maxGuests }: Bo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Client-side validation
+    if (!guestName.trim() || guestName.length < 2) {
+      alert('Please enter a valid name')
+      return
+    }
+
+    if (!guestEmail.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      alert('Please enter a valid email address')
+      return
+    }
+
+    if (!guestPhone.match(/^\+?[0-9]{10,15}$/)) {
+      alert('Please enter a valid phone number')
+      return
+    }
+
     setIsSubmitting(true)
 
     try {

@@ -80,8 +80,11 @@ export default function PaymentButton({
             })
 
             if (verifyResponse.ok) {
-              // Redirect to success page
-              window.location.href = `/booking-success/${bookingId}`
+              // Redirect to success page using client-side navigation
+              const router = require('next/navigation').useRouter
+              if (typeof window !== 'undefined') {
+                window.location.href = `/booking-success/${bookingId}`
+              }
             } else {
               alert('Payment verification failed. Please contact support.')
             }
