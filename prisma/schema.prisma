@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("GUEST") // GUEST, OWNER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  properties Property[]
+  bookings   Booking[]
+}
+
+model Property {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  location    String
+  amenities   String[]
+  photos      String[]
+  videos      String[]
+  pricePerNight Int    // Price in paise (INR)
+  maxGuests   Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  ownerId String
+  owner   User     @relation(fields: [ownerId], references: [id])
+  bookings Booking[]
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  checkInDate DateTime
+  checkOutDate DateTime
+  numberOfGuests Int
+  guestName   String
+  guestEmail  String
+  guestPhone  String
+  totalAmount Int      // Total amount in paise (INR)
+  gstAmount   Int      // GST amount in paise (INR)
+  status      String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED, COMPLETED
+  paymentType String   // FULL, PARTIAL_50
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id])
+  guestId    String?
+  guest      User?    @relation(fields: [guestId], references: [id])
+  payments   Payment[]
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  amount          Int      // Amount in paise (INR)
+  gstAmount       Int      // GST amount in paise (INR)
+  razorpayOrderId String?
+  razorpayPaymentId String?
+  status          String   @default("PENDING") // PENDING, COMPLETED, FAILED, REFUNDED
+  paymentMethod   String?  // ONLINE, CASH
+  paidAt          DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relations
+  bookingId String
+  booking   Booking @relation(fields: [bookingId], references: [id])
+}
+
