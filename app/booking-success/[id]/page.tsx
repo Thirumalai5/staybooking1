@@ -3,6 +3,8 @@ import { formatCurrency } from '@/lib/currency'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+export const dynamic = 'force-dynamic'
+
 export default async function BookingSuccessPage({
   params,
 }: {
@@ -21,8 +23,8 @@ export default async function BookingSuccessPage({
   }
 
   const totalPaid = booking.payments
-    .filter(p => p.status === 'COMPLETED')
-    .reduce((sum, p) => sum + p.amount, 0)
+    .filter((p: any) => p.status === 'COMPLETED')
+    .reduce((sum: number, p: any) => sum + p.amount, 0)
 
   const remainingAmount = booking.totalAmount - totalPaid
 

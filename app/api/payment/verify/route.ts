@@ -52,8 +52,8 @@ export async function POST(request: NextRequest) {
     }
 
     const totalPaid = booking.payments
-      .filter(p => p.status === 'COMPLETED')
-      .reduce((sum, p) => sum + p.amount, 0)
+      .filter((p: any) => p.status === 'COMPLETED')
+      .reduce((sum: number, p: any) => sum + p.amount, 0)
 
     // Update booking status based on payment
     let newStatus = booking.status

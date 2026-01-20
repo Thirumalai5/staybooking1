@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import BookingForm from '@/app/components/BookingForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function PropertyDetailPage({
   params,
 }: {
@@ -67,7 +69,7 @@ export default async function PropertyDetailPage({
                 </div>
                 {property.photos.length > 1 && (
                   <div className="grid grid-cols-4 gap-2">
-                    {property.photos.slice(1, 5).map((photo, index) => (
+                    {property.photos.slice(1, 5).map((photo: string, index: number) => (
                       <div key={index} className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
                         <img
                           src={photo}
@@ -108,7 +110,7 @@ export default async function PropertyDetailPage({
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-3">Amenities</h2>
                 <div className="grid grid-cols-2 gap-2">
-                  {property.amenities.map((amenity, index) => (
+                  {property.amenities.map((amenity: string, index: number) => (
                     <div key={index} className="flex items-center">
                       <span className="text-green-600 mr-2">✓</span>
                       <span>{amenity}</span>

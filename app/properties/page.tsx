@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { formatCurrency } from '@/lib/currency'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export default async function PropertiesPage() {
   const properties = await prisma.property.findMany({
     where: {
@@ -44,7 +46,7 @@ export default async function PropertiesPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
+            {properties.map((property: any) => (
               <Link
                 key={property.id}
                 href={`/properties/${property.id}`}

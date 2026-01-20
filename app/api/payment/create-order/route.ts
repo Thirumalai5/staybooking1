@@ -3,10 +3,17 @@ import Razorpay from 'razorpay'
 import { prisma } from '@/lib/prisma'
 import { paiseToRupees } from '@/lib/currency'
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || '',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || '',
-})
+let razorpay: Razorpay | null = null
+
+function getRazorpayInstance() {
+  if (!razorpay && process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    })
+  }
+  return razorpay
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,8 +43,17 @@ export async function POST(request: NextRequest) {
       ? Math.round(booking.gstAmount * 0.5)
       : booking.gstAmount
 
+    // Get Razorpay instance
+    const razorpayInstance = getRazorpayInstance()
+    if (!razorpayInstance) {
+      return NextResponse.json(
+        { error: 'Payment gateway not configured' },
+        { status: 500 }
+      )
+    }
+
     // Create Razorpay order (amount should be in paise)
-    const order = await razorpay.orders.create({
+    const order = await razorpayInstance.orders.create({
       amount: amountToPay,
       currency: 'INR',
       receipt: `booking_${bookingId}`,

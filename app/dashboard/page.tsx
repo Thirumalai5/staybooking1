@@ -2,6 +2,8 @@ import { prisma } from '@/lib/prisma'
 import { formatCurrency } from '@/lib/currency'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 export default async function DashboardPage() {
   const properties = await prisma.property.findMany({
     include: {
@@ -30,16 +32,16 @@ export default async function DashboardPage() {
   })
 
   const totalRevenue = allBookings
-    .filter(b => b.status === 'CONFIRMED' || b.status === 'COMPLETED')
-    .reduce((sum, b) => {
+    .filter((b: any) => b.status === 'CONFIRMED' || b.status === 'COMPLETED')
+    .reduce((sum: number, b: any) => {
       const paid = b.payments
-        .filter(p => p.status === 'COMPLETED')
-        .reduce((s, p) => s + p.amount, 0)
+        .filter((p: any) => p.status === 'COMPLETED')
+        .reduce((s: number, p: any) => s + p.amount, 0)
       return sum + paid
     }, 0)
 
-  const pendingBookings = allBookings.filter(b => b.status === 'PENDING').length
-  const confirmedBookings = allBookings.filter(b => b.status === 'CONFIRMED').length
+  const pendingBookings = allBookings.filter((b: any) => b.status === 'PENDING').length
+  const confirmedBookings = allBookings.filter((b: any) => b.status === 'CONFIRMED').length
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -115,10 +117,10 @@ export default async function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {allBookings.slice(0, 10).map((booking) => {
+                  {allBookings.slice(0, 10).map((booking: any) => {
                     const totalPaid = booking.payments
-                      .filter(p => p.status === 'COMPLETED')
-                      .reduce((sum, p) => sum + p.amount, 0)
+                      .filter((p: any) => p.status === 'COMPLETED')
+                      .reduce((sum: number, p: any) => sum + p.amount, 0)
                     
                     return (
                       <tr key={booking.id}>
@@ -164,13 +166,13 @@ export default async function DashboardPage() {
             <p className="text-gray-500">No properties yet</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {properties.map((property) => (
+              {properties.map((property: any) => (
                 <div key={property.id} className="border rounded-lg p-4">
                   <h3 className="font-semibold mb-2">{property.name}</h3>
                   <p className="text-sm text-gray-600 mb-2">{property.location}</p>
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-gray-500">
-                      {property.bookings.filter(b => b.status === 'CONFIRMED').length} bookings
+                      {property.bookings.filter((b: any) => b.status === 'CONFIRMED').length} bookings
                     </span>
                     <span className="font-semibold text-blue-600">
                       {formatCurrency(property.pricePerNight)}/night

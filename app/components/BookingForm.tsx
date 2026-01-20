@@ -85,7 +85,7 @@ export default function BookingForm({ propertyId, pricePerNight, maxGuests }: Bo
             </label>
             <DatePicker
               selected={checkInDate}
-              onChange={(date) => setCheckInDate(date)}
+              onChange={(date: Date | null) => setCheckInDate(date)}
               selectsStart
               startDate={checkInDate}
               endDate={checkOutDate}
@@ -101,7 +101,7 @@ export default function BookingForm({ propertyId, pricePerNight, maxGuests }: Bo
             </label>
             <DatePicker
               selected={checkOutDate}
-              onChange={(date) => setCheckOutDate(date)}
+              onChange={(date: Date | null) => setCheckOutDate(date)}
               selectsEnd
               startDate={checkInDate}
               endDate={checkOutDate}

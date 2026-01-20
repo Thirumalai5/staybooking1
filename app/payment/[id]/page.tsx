@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import PaymentButton from '@/app/components/PaymentButton'
 import { formatCurrency } from '@/lib/currency'
 
+export const dynamic = 'force-dynamic'
+
 export default async function PaymentPage({
   params,
 }: {
